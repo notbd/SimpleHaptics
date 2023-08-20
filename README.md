@@ -1,3 +1,3 @@
 # SimpleHaptics
 
-A description of this package.
+Simple and easy haptic generation in iOS.
