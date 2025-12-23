@@ -27,7 +27,7 @@ Alternatively, add it to your `Package.swift` file:
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/notbd/SimpleHaptics.git", from: "1.0.0")
+  .package(url: "https://github.com/notbd/SimpleHaptics.git", from: "0.2.0")
 ]
 ```
 
@@ -41,7 +41,7 @@ import SimpleHaptics
 
 ### Basic Usage
 
-- The quickest way to generate haptic feedback by invoking a task:
+- `generateTask(_:)` is the most common way to quickly generate haptics in a synchronous context:
 
 ```swift
 // in a synchronous context
