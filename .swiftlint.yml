@@ -8,6 +8,7 @@
 ###
 
 excluded:
+  - .build
   - Carthage
   - Pods
   - Imports
@@ -65,12 +66,6 @@ type_name:
     warning: 60
     error: 80
   excluded: iPhone # excluded via string
-
-identifier_name:
-  min_length: 1 # only warning
-  max_length: # warning and error
-    warning: 50
-    error: 80
 
 function_parameter_count:
   warning: 7

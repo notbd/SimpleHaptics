@@ -21,10 +21,10 @@
 ### FORMAT OPTIONS
 
 ## swiftVersion
---swiftversion 5.8
+--swiftversion 6.0
 
 ## fileHeader
---header "\n {file}\n SimpleHaptics\n\n Copyright (c) {year} TIANWEI ZHANG. All rights reserved.\n"
+--header "\n {file}\n SimpleHaptics\n\n Copyright (c) {created.year} TIANWEI ZHANG. All rights reserved.\n"
 
 # blankLinesAtEndOfScope,
 # blankLinesAtStartOfScope
