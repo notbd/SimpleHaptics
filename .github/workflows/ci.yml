@@ -22,9 +22,11 @@ env:
   SWIFTFORMAT_VERSION: 0.64.5
 
 jobs:
-  lint-and-build:
-    name: Lint and build
+  # GitHub often can't find a free macOS arm64 runner, so each Xcode gets one job instead of several.
+  latest-xcode:
+    name: Xcode 26.6
     runs-on: macos-26
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - run: sudo xcode-select -s "$XCODE_LATEST"
@@ -54,13 +56,6 @@ jobs:
           -scheme SimpleHapticsDemo
           -destination "generic/platform=iOS Simulator"
           CODE_SIGNING_ALLOWED=NO
-
-  test:
-    name: Test
-    runs-on: macos-26
-    steps:
-      - uses: actions/checkout@v7
-      - run: sudo xcode-select -s "$XCODE_LATEST"
       - name: Test on macOS
         run: swift test
       - name: Test on iOS Simulator
@@ -77,6 +72,7 @@ jobs:
   oldest-xcode:
     name: Xcode 16.0
     runs-on: macos-15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       - run: sudo xcode-select -s "$XCODE_OLDEST"
