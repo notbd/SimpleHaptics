@@ -2,7 +2,7 @@
 //  SimpleHapticsTests.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2026 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
 import Testing
@@ -39,7 +39,9 @@ final class RecordingBackend: HapticBackend {
 @MainActor
 @Suite(.serialized)
 struct SimpleHapticsTests {
-  let recorder = RecordingBackend()
+  // HapticModifierTests.swift reads the recorder from an extension of this suite.
+  // swiftformat:disable:next testSuiteAccessControl
+  let recorder: RecordingBackend = .init()
 
   // MARK: Lifecycle
 

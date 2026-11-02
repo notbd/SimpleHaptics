@@ -5,7 +5,7 @@
 ![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Mac%20Catalyst%20%7C%20macOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20visionOS-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
 
-Play haptic feedback with one line of code, on every Apple platform.
+Play haptic feedback with one line of code. Plays on iPhone, Apple Watch, and Mac, and builds on every Apple platform.
 
 ```swift
 SimpleHaptics.play(.success)
@@ -22,14 +22,14 @@ SimpleHaptics.play(.success)
 
 ## Requirements
 
-| Platform     | Minimum | What plays                                        |
-| ------------ | ------- | ------------------------------------------------- |
-| iOS, iPadOS  | 13.0    | UIKit feedback generators                         |
-| Mac Catalyst | 13.1    | UIKit feedback generators. `isSupported` is `false` |
-| macOS        | 10.15   | A generic haptic on a Force Touch trackpad        |
-| watchOS      | 6.0     | The closest `WKHapticType`                        |
-| tvOS         | 13.0    | Nothing. Calls are safe and do nothing.           |
-| visionOS     | 1.0     | Nothing. Calls are safe and do nothing.           |
+| Platform     | Minimum | What plays                                                               |
+| ------------ | ------- | ------------------------------------------------------------------------ |
+| iOS, iPadOS  | 13.0    | UIKit feedback generators on iPhone. Not tested on an iPad               |
+| Mac Catalyst | 13.1    | UIKit feedback generators. Not tested on a Mac. `isSupported` is `false` |
+| macOS        | 10.15   | A generic haptic on a Force Touch trackpad                               |
+| watchOS      | 6.0     | The closest `WKHapticType`                                               |
+| tvOS         | 13.0    | Nothing. Calls are safe and do nothing.                                  |
+| visionOS     | 1.0     | Nothing. Calls are safe and do nothing.                                  |
 
 - Xcode 16 or later.
 - The SwiftUI modifier needs iOS 14, macOS 11, tvOS 14, or watchOS 7.

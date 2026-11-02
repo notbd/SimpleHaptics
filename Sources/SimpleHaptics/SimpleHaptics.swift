@@ -2,7 +2,7 @@
 //  SimpleHaptics.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2023 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
 /// Plays haptic feedback with one line of code.
@@ -21,7 +21,6 @@
 ///
 /// Haptics play on iPhone, on Apple Watch, and in native Mac apps on a Force Touch trackpad. On other
 /// devices and platforms, every call is safe and does nothing.
-@available(iOS 13.0, macCatalyst 13.1, *)
 public enum SimpleHaptics {
   /// Defines the types of haptic feedback that can be generated.
   ///
@@ -31,7 +30,9 @@ public enum SimpleHaptics {
   /// - Notification haptics: give feedback when a task or action succeeds, produces a warning, or fails.
   /// - Impact haptics: give feedback when an impact between UI elements occurs.
   ///
-  /// On Apple Watch and Mac, each case maps to the closest system haptic. See the README for the mapping.
+  /// On Apple Watch, each case plays the closest `WKHapticType`: ``success`` plays `.success`, ``warning``
+  /// plays `.retry`, ``error`` plays `.failure`, and every other case plays `.click`. On Mac, every case plays
+  /// the same generic haptic.
   public enum HapticType: Sendable, Hashable, CaseIterable {
     /// A gentle tap that indicates a change in selection, such as a picker value or a segmented control.
     case selection
@@ -109,6 +110,7 @@ public enum SimpleHaptics {
   @MainActor
   static public func play(_ type: HapticType) {
     guard isEnabled else { return }
+
     backend.play(type, intensity: nil)
   }
 
@@ -129,6 +131,7 @@ public enum SimpleHaptics {
   @MainActor
   static public func play(_ type: HapticType, intensity: Double) {
     guard isEnabled else { return }
+
     backend.play(type, intensity: intensity.isNaN ? 1 : min(max(intensity, 0), 1))
   }
 
@@ -149,6 +152,7 @@ public enum SimpleHaptics {
   @MainActor
   static public func prepare(_ type: HapticType) {
     guard isEnabled else { return }
+
     backend.prepare(type)
   }
 

@@ -2,7 +2,7 @@
 //  HapticBackend.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2026 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
 #if os(iOS)
@@ -44,15 +44,15 @@ final class SystemHapticBackend: HapticBackend {
   #if os(iOS)
   private typealias ImpactStyle = UIImpactFeedbackGenerator.FeedbackStyle
 
-  lazy private var selectionGenerator = UISelectionFeedbackGenerator()
-  lazy private var notificationGenerator = UINotificationFeedbackGenerator()
+  lazy private var selectionGenerator: UISelectionFeedbackGenerator = .init()
+  lazy private var notificationGenerator: UINotificationFeedbackGenerator = .init()
   private var impactGenerators: [ImpactStyle: UIImpactFeedbackGenerator] = [:]
 
   private func impactGenerator(_ style: ImpactStyle) -> UIImpactFeedbackGenerator {
     if let generator = impactGenerators[style] {
       return generator
     }
-    let generator = UIImpactFeedbackGenerator(style: style)
+    let generator: UIImpactFeedbackGenerator = .init(style: style)
     impactGenerators[style] = generator
     return generator
   }
@@ -63,17 +63,17 @@ final class SystemHapticBackend: HapticBackend {
   func play(_ type: SimpleHaptics.HapticType, intensity: Double?) {
     #if os(iOS)
     switch type.uiKitFeedback {
-    case .selection:
-      selectionGenerator.selectionChanged()
-    case .notification(let notificationType):
-      notificationGenerator.notificationOccurred(notificationType)
-    case .impact(let style):
-      if let intensity {
-        impactGenerator(style).impactOccurred(intensity: CGFloat(intensity))
-      }
-      else {
-        impactGenerator(style).impactOccurred()
-      }
+      case .selection:
+        selectionGenerator.selectionChanged()
+      case .notification(let notificationType):
+        notificationGenerator.notificationOccurred(notificationType)
+      case .impact(let style):
+        if let intensity {
+          impactGenerator(style).impactOccurred(intensity: CGFloat(intensity))
+        }
+        else {
+          impactGenerator(style).impactOccurred()
+        }
     }
     #elseif os(watchOS)
     WKInterfaceDevice.current().play(type.watchHaptic)
@@ -85,12 +85,12 @@ final class SystemHapticBackend: HapticBackend {
   func prepare(_ type: SimpleHaptics.HapticType) {
     #if os(iOS)
     switch type.uiKitFeedback {
-    case .selection:
-      selectionGenerator.prepare()
-    case .notification:
-      notificationGenerator.prepare()
-    case .impact(let style):
-      impactGenerator(style).prepare()
+      case .selection:
+        selectionGenerator.prepare()
+      case .notification:
+        notificationGenerator.prepare()
+      case .impact(let style):
+        impactGenerator(style).prepare()
     }
     #endif
   }
@@ -109,15 +109,15 @@ enum UIKitFeedback: Equatable {
 extension SimpleHaptics.HapticType {
   var uiKitFeedback: UIKitFeedback {
     switch self {
-    case .selection: .selection
-    case .success: .notification(.success)
-    case .warning: .notification(.warning)
-    case .error: .notification(.error)
-    case .light: .impact(.light)
-    case .medium: .impact(.medium)
-    case .heavy: .impact(.heavy)
-    case .soft: .impact(.soft)
-    case .rigid: .impact(.rigid)
+      case .selection: .selection
+      case .success: .notification(.success)
+      case .warning: .notification(.warning)
+      case .error: .notification(.error)
+      case .light: .impact(.light)
+      case .medium: .impact(.medium)
+      case .heavy: .impact(.heavy)
+      case .soft: .impact(.soft)
+      case .rigid: .impact(.rigid)
     }
   }
 }
@@ -128,15 +128,15 @@ extension SimpleHaptics.HapticType {
   /// The closest watchOS haptic. watchOS has no impact styles, so every impact type plays a click.
   var watchHaptic: WKHapticType {
     switch self {
-    case .success: .success
-    case .warning: .retry
-    case .error: .failure
-    case .selection,
-         .light,
-         .medium,
-         .heavy,
-         .soft,
-         .rigid: .click
+      case .success: .success
+      case .warning: .retry
+      case .error: .failure
+      case .selection,
+           .light,
+           .medium,
+           .heavy,
+           .soft,
+           .rigid: .click
     }
   }
 }

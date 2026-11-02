@@ -2,7 +2,7 @@
 //  SimpleHapticsDemoApp.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2026 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
 import SwiftUI

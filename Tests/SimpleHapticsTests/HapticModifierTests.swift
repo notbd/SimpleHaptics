@@ -2,7 +2,7 @@
 //  HapticModifierTests.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2026 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
 // UIWindow needs a running UIApplication, which Mac Catalyst test bundles don't have.
@@ -23,8 +23,13 @@ final class Counter: ObservableObject {
 
 @available(iOS 14.0, *)
 private struct CounterView: View {
-  @ObservedObject var counter: Counter
+  @ObservedObject private var counter: Counter
   let condition: ((Int, Int) -> Bool)?
+
+  init(counter: Counter, condition: ((Int, Int) -> Bool)?) {
+    self.counter = counter
+    self.condition = condition
+  }
 
   var body: some View {
     if let condition {
@@ -43,7 +48,11 @@ private struct CounterView: View {
 /// Picks the haptic type from the current value, so a stale type would show up as the wrong event.
 @available(iOS 14.0, *)
 private struct ParityView: View {
-  @ObservedObject var counter: Counter
+  @ObservedObject private var counter: Counter
+
+  init(counter: Counter) {
+    self.counter = counter
+  }
 
   var body: some View {
     Text("\(counter.value)")
@@ -57,13 +66,12 @@ private struct ParityView: View {
 /// ``SimpleHapticsTests`` because every test there replaces the shared backend, and the suite runs its
 /// tests one at a time.
 extension SimpleHapticsTests {
-
   // MARK: Internal
 
   @Test
   @available(iOS 14.0, *)
   func modifierPlaysOnlyWhenTheTriggerChanges() async throws {
-    let counter = Counter()
+    let counter: Counter = .init()
     let window = try await show(CounterView(counter: counter, condition: nil))
     try await Task.sleep(nanoseconds: 200_000_000)
     #expect(recorder.events.isEmpty)
@@ -77,7 +85,7 @@ extension SimpleHapticsTests {
   @Test
   @available(iOS 14.0, *)
   func modifierPassesOldAndNewValuesToTheCondition() async throws {
-    let counter = Counter()
+    let counter: Counter = .init()
     var calls: [[Int]] = []
     let window = try await show(CounterView(counter: counter) { oldValue, newValue in
       calls.append([oldValue, newValue])
@@ -85,8 +93,11 @@ extension SimpleHapticsTests {
     })
 
     counter.value = 1
-    counter.value = 1 // Setting the same value must not call the condition.
     try await waitUntil { calls.count == 1 }
+    // Setting the same value again in a later update must not call the condition.
+    counter.value = 1
+    try await Task.sleep(nanoseconds: 200_000_000)
+    #expect(calls.count == 1)
     #expect(recorder.events.isEmpty)
 
     counter.value = 2
@@ -99,7 +110,7 @@ extension SimpleHapticsTests {
   @Test
   @available(iOS 14.0, *)
   func modifierUsesTheTypeFromTheLatestUpdate() async throws {
-    let counter = Counter()
+    let counter: Counter = .init()
     let window = try await show(ParityView(counter: counter))
 
     counter.value = 1
@@ -113,7 +124,7 @@ extension SimpleHapticsTests {
   @Test
   @available(iOS 14.0, *)
   func modifierRespectsIsEnabled() async throws {
-    let counter = Counter()
+    let counter: Counter = .init()
     let window = try await show(CounterView(counter: counter, condition: nil))
 
     SimpleHaptics.isEnabled = false
@@ -132,7 +143,7 @@ extension SimpleHapticsTests {
   // MARK: Private
 
   private func show(_ view: some View) async throws -> UIWindow {
-    let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+    let window: UIWindow = .init(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
     window.rootViewController = UIHostingController(rootView: view)
     window.makeKeyAndVisible()
     try await Task.sleep(nanoseconds: 100_000_000)

@@ -2,7 +2,7 @@
 //  View+Haptic.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2026 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
 #if canImport(SwiftUI)
@@ -67,7 +67,7 @@ private struct HapticModifier<T: Equatable>: ViewModifier {
 
   /// Before iOS 17, `onChange` can run the closure from the previous update, which captured the previous
   /// `type` and `condition`. Both closures read them from this shared object instead.
-  @State private var latest = LatestHaptic<T>()
+  @State private var latest: LatestHaptic<T> = .init()
 
   // MARK: Internal
 
@@ -87,6 +87,7 @@ private struct HapticModifier<T: Equatable>: ViewModifier {
     }
     else {
       #if os(visionOS)
+      // Every visionOS version takes the branch above. This keeps the deprecated `onChange` out of the build.
       content
       #else
       // Before iOS 17, the capture list keeps the old value of `trigger`.
@@ -115,6 +116,7 @@ final private class LatestHaptic<T> {
 
   func playIfNeeded(oldValue: T, newValue: T) {
     guard condition?(oldValue, newValue) ?? true else { return }
+
     SimpleHaptics.play(type)
   }
 }

@@ -21,7 +21,6 @@ let package = Package(
   targets: [
     .target(
       name: "SimpleHaptics",
-      dependencies: [],
       resources: [.copy("PrivacyInfo.xcprivacy")]),
     .testTarget(
       name: "SimpleHapticsTests",

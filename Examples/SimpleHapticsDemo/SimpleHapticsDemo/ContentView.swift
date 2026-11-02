@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2026 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
 import SimpleHaptics
@@ -128,6 +128,7 @@ private struct PrepareRow: View {
         DragGesture(minimumDistance: 0)
           .onChanged { _ in
             guard !isPressing else { return }
+
             isPressing = true
             SimpleHaptics.prepare(.rigid)
           }
