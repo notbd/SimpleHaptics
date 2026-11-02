@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-02
+
 ### Added
 
 - `play(_:)`, a synchronous main-actor call that plays a haptic right away.
@@ -54,7 +56,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `generate(_:)` and `generateTask(_:)` with nine haptic types.
 
-[Unreleased]: https://github.com/notbd/SimpleHaptics/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/notbd/SimpleHaptics/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/notbd/SimpleHaptics/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/notbd/SimpleHaptics/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/notbd/SimpleHaptics/compare/v0.1.0-alpha...v0.1.0
 [0.1.0-alpha]: https://github.com/notbd/SimpleHaptics/releases/tag/v0.1.0-alpha
