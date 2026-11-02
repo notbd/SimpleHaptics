@@ -19,8 +19,8 @@
 /// await SimpleHaptics.play(.success)
 /// ```
 ///
-/// Haptics play on iPhone, Apple Watch, and Macs with a Force Touch trackpad. On other devices and
-/// platforms, every call is safe and does nothing.
+/// Haptics play on iPhone, on Apple Watch, and in native Mac apps on a Force Touch trackpad. On other
+/// devices and platforms, every call is safe and does nothing.
 @available(iOS 13.0, macCatalyst 13.1, *)
 public enum SimpleHaptics {
   /// Defines the types of haptic feedback that can be generated.
@@ -61,7 +61,7 @@ public enum SimpleHaptics {
   /// when the user turns off haptics in your app's settings:
   ///
   /// ```swift
-  /// SimpleHaptics.isEnabled = UserDefaults.standard.bool(forKey: "hapticsEnabled")
+  /// SimpleHaptics.isEnabled = UserDefaults.standard.object(forKey: "hapticsEnabled") as? Bool ?? true
   /// ```
   ///
   /// When this value is `false`, ``play(_:)``, ``play(_:intensity:)``, ``prepare(_:)``, and the
@@ -71,10 +71,11 @@ public enum SimpleHaptics {
 
   /// A Boolean value that indicates whether the current device can play haptics.
   ///
-  /// - On iPhone and iPad, this value comes from Core Haptics. It is `false` on devices without a
-  ///   Taptic Engine and in Simulator.
+  /// - On iPhone and iPad, this value comes from Core Haptics
+  ///   (`CHHapticEngine.capabilitiesForHardware().supportsHaptics`). It is `false` in Simulator.
+  /// - In a Mac Catalyst app, this value also comes from Core Haptics, which reports `false` on Mac.
   /// - On Apple Watch, this value is always `true`.
-  /// - On Mac, this value is always `true`, but haptics play only on a Force Touch trackpad.
+  /// - In a native Mac app, this value is always `true`, but haptics play only on a Force Touch trackpad.
   ///   macOS has no public API to check for one.
   /// - On Apple TV and Apple Vision Pro, this value is always `false`.
   ///
@@ -124,11 +125,11 @@ public enum SimpleHaptics {
   /// - Parameters:
   ///   - type: The type of haptic to play.
   ///   - intensity: A value from `0.0` (weakest) to `1.0` (strongest). Values outside this range are
-  ///     clamped to it.
+  ///     clamped to it, and `nan` counts as `1.0`.
   @MainActor
   static public func play(_ type: HapticType, intensity: Double) {
     guard isEnabled else { return }
-    backend.play(type, intensity: min(max(intensity, 0), 1))
+    backend.play(type, intensity: intensity.isNaN ? 1 : min(max(intensity, 0), 1))
   }
 
   /// Prepares the haptic hardware to play a haptic with minimal latency.

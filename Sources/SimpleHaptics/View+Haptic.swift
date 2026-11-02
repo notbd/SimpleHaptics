@@ -65,13 +65,24 @@ private struct HapticModifier<T: Equatable>: ViewModifier {
   let trigger: T
   let condition: ((T, T) -> Bool)?
 
+  /// Before iOS 17, `onChange` can run the closure from the previous update, which captured the previous
+  /// `type` and `condition`. Both closures read them from this shared object instead.
+  @State private var latest = LatestHaptic<T>()
+
   // MARK: Internal
 
-  @ViewBuilder
   func body(content: Content) -> some View {
+    latest.update(type: type, condition: condition)
+    return observeTrigger(of: content)
+  }
+
+  // MARK: Private
+
+  @ViewBuilder
+  private func observeTrigger(of content: Content) -> some View {
     if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
-      content.onChange(of: trigger) { oldValue, newValue in
-        playIfNeeded(oldValue: oldValue, newValue: newValue)
+      content.onChange(of: trigger) { [latest] oldValue, newValue in
+        latest.playIfNeeded(oldValue: oldValue, newValue: newValue)
       }
     }
     else {
@@ -79,16 +90,30 @@ private struct HapticModifier<T: Equatable>: ViewModifier {
       content
       #else
       // Before iOS 17, the capture list keeps the old value of `trigger`.
-      content.onChange(of: trigger) { [trigger] newValue in
-        playIfNeeded(oldValue: trigger, newValue: newValue)
+      content.onChange(of: trigger) { [latest, trigger] newValue in
+        latest.playIfNeeded(oldValue: trigger, newValue: newValue)
       }
       #endif
     }
   }
+}
 
-  // MARK: Private
+// MARK: - LatestHaptic
 
-  private func playIfNeeded(oldValue: T, newValue: T) {
+/// The haptic type and condition from the latest update of a `HapticModifier`.
+@MainActor
+final private class LatestHaptic<T> {
+  private var type = SimpleHaptics.HapticType.selection
+  private var condition: ((T, T) -> Bool)?
+
+  // MARK: Internal
+
+  func update(type: SimpleHaptics.HapticType, condition: ((T, T) -> Bool)?) {
+    self.type = type
+    self.condition = condition
+  }
+
+  func playIfNeeded(oldValue: T, newValue: T) {
     guard condition?(oldValue, newValue) ?? true else { return }
     SimpleHaptics.play(type)
   }

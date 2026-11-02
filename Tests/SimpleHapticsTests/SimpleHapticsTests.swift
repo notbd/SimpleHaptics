@@ -2,11 +2,14 @@
 //  SimpleHapticsTests.swift
 //  SimpleHaptics
 //
-//  Copyright (c) 2023 TIANWEI ZHANG. All rights reserved.
+//  Copyright (c) 2026 TIANWEI ZHANG. All rights reserved.
 //
 
 import Testing
 @testable import SimpleHaptics
+#if os(watchOS)
+import WatchKit
+#endif
 
 // MARK: - RecordingBackend
 
@@ -54,7 +57,7 @@ struct SimpleHapticsTests {
     #expect(recorder.events == [.play(.success, intensity: nil)])
   }
 
-  @Test(arguments: [(0.4, 0.4), (1.5, 1.0), (-0.2, 0.0)])
+  @Test(arguments: [(0.4, 0.4), (1.5, 1.0), (-0.2, 0.0), (.nan, 1.0)])
   func playClampsTheIntensity(input: Double, expected: Double) {
     SimpleHaptics.play(.heavy, intensity: input)
 
@@ -133,12 +136,19 @@ struct SimpleHapticsTests {
   #endif
 
   #if os(watchOS)
-  @Test
-  func watchMapping() {
-    #expect(SimpleHaptics.HapticType.success.watchHaptic == .success)
-    #expect(SimpleHaptics.HapticType.warning.watchHaptic == .retry)
-    #expect(SimpleHaptics.HapticType.error.watchHaptic == .failure)
-    #expect(SimpleHaptics.HapticType.heavy.watchHaptic == .click)
+  @Test(arguments: [
+    (SimpleHaptics.HapticType.selection, WKHapticType.click),
+    (.success, .success),
+    (.warning, .retry),
+    (.error, .failure),
+    (.light, .click),
+    (.medium, .click),
+    (.heavy, .click),
+    (.soft, .click),
+    (.rigid, .click),
+  ])
+  func watchMapping(type: SimpleHaptics.HapticType, expected: WKHapticType) {
+    #expect(type.watchHaptic == expected)
   }
   #endif
 }
