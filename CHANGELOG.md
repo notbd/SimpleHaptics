@@ -5,7 +5,7 @@ All notable changes to SimpleHaptics are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.0] - Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -32,7 +32,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - The privacy manifest is now bundled with the library. Version 0.2.0 didn't copy it.
-- The package builds on macOS, tvOS, watchOS, and visionOS.
 - The repository no longer ships an Xcode scheme that changes global Xcode preferences when it builds.
 - The documentation no longer says that cancelling the task from `generateTask(_:)` stops the haptic. It never
   did.
@@ -55,7 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `generate(_:)` and `generateTask(_:)` with nine haptic types.
 
-[0.3.0]: https://github.com/notbd/SimpleHaptics/compare/v0.2.0...dev
+[Unreleased]: https://github.com/notbd/SimpleHaptics/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/notbd/SimpleHaptics/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/notbd/SimpleHaptics/compare/v0.1.0-alpha...v0.1.0
 [0.1.0-alpha]: https://github.com/notbd/SimpleHaptics/releases/tag/v0.1.0-alpha

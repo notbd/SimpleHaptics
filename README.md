@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/notbd/SimpleHaptics/actions/workflows/ci.yml/badge.svg)](https://github.com/notbd/SimpleHaptics/actions/workflows/ci.yml)
 ![Swift 6](https://img.shields.io/badge/Swift-6-orange)
-![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20visionOS-blue)
+![Platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Mac%20Catalyst%20%7C%20macOS%20%7C%20watchOS%20%7C%20tvOS%20%7C%20visionOS-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
 
 Play haptic feedback with one line of code, on every Apple platform.
@@ -25,7 +25,7 @@ SimpleHaptics.play(.success)
 | Platform     | Minimum | What plays                                        |
 | ------------ | ------- | ------------------------------------------------- |
 | iOS, iPadOS  | 13.0    | UIKit feedback generators                         |
-| Mac Catalyst | 13.1    | UIKit feedback generators                         |
+| Mac Catalyst | 13.1    | UIKit feedback generators. `isSupported` is `false` |
 | macOS        | 10.15   | A generic haptic on a Force Touch trackpad        |
 | watchOS      | 6.0     | The closest `WKHapticType`                        |
 | tvOS         | 13.0    | Nothing. Calls are safe and do nothing.           |
@@ -164,7 +164,7 @@ support iOS 14 to 16, or when the haptic must respect `isEnabled`.
 
 | 0.2                                       | 0.3                                                        |
 | ----------------------------------------- | ---------------------------------------------------------- |
-| `SimpleHaptics.generateTask(.success)`    | `SimpleHaptics.play(.success)`                             |
+| `SimpleHaptics.generateTask(.success)`    | `SimpleHaptics.play(.success)` on the main actor. Elsewhere, `Task { @MainActor in SimpleHaptics.play(.success) }` |
 | `await SimpleHaptics.generate(.success)`  | `await SimpleHaptics.play(.success)`, or no `await` on the main actor |
 
 Cancelling the task that `generateTask(_:)` returned never stopped the haptic, so no behavior is lost.
