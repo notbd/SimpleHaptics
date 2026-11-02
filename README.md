@@ -32,7 +32,7 @@ SimpleHaptics.play(.success)
 | visionOS     | 1.0     | Nothing. Calls are safe and do nothing.                                  |
 
 - Xcode 16 or later.
-- The SwiftUI modifier needs iOS 14, macOS 11, tvOS 14, or watchOS 7.
+- The SwiftUI modifier needs iOS 14, Mac Catalyst 14, macOS 11, tvOS 14, watchOS 7, or visionOS 1.
 
 ## Installation
 
@@ -126,6 +126,7 @@ struct SettingsView: View {
 }
 ```
 
+This example uses the `onChange(of:initial:_:)` from iOS 17. On iOS 14 to 16, use `onChange(of:perform:)`.
 Set `isEnabled` again when the app launches, because the value isn't saved. Use `SimpleHaptics.isSupported` to
 hide the setting on devices that can't play haptics.
 

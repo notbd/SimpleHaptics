@@ -146,6 +146,8 @@ extension SimpleHapticsTests {
     let window: UIWindow = .init(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
     window.rootViewController = UIHostingController(rootView: view)
     window.makeKeyAndVisible()
+    // Lay out now, so SwiftUI records the first trigger value before the test changes it.
+    window.layoutIfNeeded()
     try await Task.sleep(nanoseconds: 100_000_000)
     return window
   }

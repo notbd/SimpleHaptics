@@ -7,6 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- The example app no longer sets a development team. Select your own team before you run it on a device.
+
+### Fixed
+
+- The README says that its settings example uses the `onChange` from iOS 17, and lists Mac Catalyst 14 and
+  visionOS 1 for the SwiftUI modifier.
+- The documentation of `play(_:intensity:)` and `prepare(_:)` says that they have an effect on iPhone only,
+  not on iPad.
+
 ## [0.3.0] - 2026-11-02
 
 ### Added

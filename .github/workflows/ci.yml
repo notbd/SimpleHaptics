@@ -67,7 +67,7 @@ jobs:
             echo "::error::No available iPhone simulator on this runner"
             exit 1
           fi
-          xcodebuild test -quiet -scheme SimpleHaptics -destination "id=$UDID"
+          xcodebuild test -scheme SimpleHaptics -destination "id=$UDID"
 
   oldest-xcode:
     name: Xcode 16.0

@@ -117,7 +117,7 @@ public enum SimpleHaptics {
   /// Plays a haptic right away with the intensity that you specify.
   ///
   /// The intensity applies to the impact types: ``HapticType/light``, ``HapticType/medium``,
-  /// ``HapticType/heavy``, ``HapticType/soft``, and ``HapticType/rigid``, on iPhone and iPad.
+  /// ``HapticType/heavy``, ``HapticType/soft``, and ``HapticType/rigid``, on iPhone.
   /// Other types and other platforms ignore it.
   ///
   /// ```swift
@@ -146,7 +146,7 @@ public enum SimpleHaptics {
   /// .onEnded { _ in SimpleHaptics.play(.rigid) }
   /// ```
   ///
-  /// This method has an effect on iPhone and iPad only.
+  /// This method has an effect on iPhone only.
   ///
   /// - Parameter type: The type of haptic that you expect to play.
   @MainActor
