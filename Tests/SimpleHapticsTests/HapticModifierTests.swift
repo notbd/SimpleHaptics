@@ -21,6 +21,7 @@ final class Counter: ObservableObject {
 
 // MARK: - CounterView
 
+@available(iOS 14.0, *)
 private struct CounterView: View {
   @ObservedObject var counter: Counter
   let condition: ((Int, Int) -> Bool)?
@@ -40,6 +41,7 @@ private struct CounterView: View {
 // MARK: - ParityView
 
 /// Picks the haptic type from the current value, so a stale type would show up as the wrong event.
+@available(iOS 14.0, *)
 private struct ParityView: View {
   @ObservedObject var counter: Counter
 
@@ -59,6 +61,7 @@ extension SimpleHapticsTests {
   // MARK: Internal
 
   @Test
+  @available(iOS 14.0, *)
   func modifierPlaysOnlyWhenTheTriggerChanges() async throws {
     let counter = Counter()
     let window = try await show(CounterView(counter: counter, condition: nil))
@@ -72,6 +75,7 @@ extension SimpleHapticsTests {
   }
 
   @Test
+  @available(iOS 14.0, *)
   func modifierPassesOldAndNewValuesToTheCondition() async throws {
     let counter = Counter()
     var calls: [[Int]] = []
@@ -93,6 +97,7 @@ extension SimpleHapticsTests {
   }
 
   @Test
+  @available(iOS 14.0, *)
   func modifierUsesTheTypeFromTheLatestUpdate() async throws {
     let counter = Counter()
     let window = try await show(ParityView(counter: counter))
@@ -106,6 +111,7 @@ extension SimpleHapticsTests {
   }
 
   @Test
+  @available(iOS 14.0, *)
   func modifierRespectsIsEnabled() async throws {
     let counter = Counter()
     let window = try await show(CounterView(counter: counter, condition: nil))
