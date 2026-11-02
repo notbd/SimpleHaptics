@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-02
+
 ### Changed
 
 - The example app no longer sets a development team. Select your own team before you run it on a device.
@@ -14,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - The README says that its settings example uses the `onChange` from iOS 17, and lists Mac Catalyst 14 and
-  visionOS 1 for the SwiftUI modifier.
+  visionOS 1 for the SwiftUI modifier, which builds and does nothing on platforms that don't play haptics.
 - The documentation of `play(_:intensity:)` and `prepare(_:)` says that they have an effect on iPhone only,
   not on iPad.
 
@@ -67,7 +69,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `generate(_:)` and `generateTask(_:)` with nine haptic types.
 
-[Unreleased]: https://github.com/notbd/SimpleHaptics/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/notbd/SimpleHaptics/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/notbd/SimpleHaptics/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/notbd/SimpleHaptics/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/notbd/SimpleHaptics/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/notbd/SimpleHaptics/compare/v0.1.0-alpha...v0.1.0
