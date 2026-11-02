@@ -24,6 +24,9 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v7
+        with:
+          # SwiftFormat reads each file's creation year from the Git history for the header check.
+          fetch-depth: 0
       - name: Install pinned SwiftLint and SwiftFormat
         run: |
           curl -sSfL -o swiftlint.zip \
