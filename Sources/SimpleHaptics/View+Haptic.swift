@@ -65,13 +65,16 @@ private struct HapticModifier<T: Equatable>: ViewModifier {
   let trigger: T
   let condition: ((T, T) -> Bool)?
 
+  // MARK: Internal
+
   @ViewBuilder
   func body(content: Content) -> some View {
     if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
       content.onChange(of: trigger) { oldValue, newValue in
         playIfNeeded(oldValue: oldValue, newValue: newValue)
       }
-    } else {
+    }
+    else {
       #if os(visionOS)
       content
       #else
@@ -82,6 +85,8 @@ private struct HapticModifier<T: Equatable>: ViewModifier {
       #endif
     }
   }
+
+  // MARK: Private
 
   private func playIfNeeded(oldValue: T, newValue: T) {
     guard condition?(oldValue, newValue) ?? true else { return }

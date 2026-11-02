@@ -6,10 +6,10 @@
 //
 
 #if os(iOS)
-@testable import SimpleHaptics
 import SwiftUI
 import Testing
 import UIKit
+@testable import SimpleHaptics
 
 // MARK: - Counter
 
@@ -28,7 +28,8 @@ private struct CounterView: View {
     if let condition {
       Text("\(counter.value)")
         .haptic(.light, trigger: counter.value, condition: condition)
-    } else {
+    }
+    else {
       Text("\(counter.value)")
         .haptic(.light, trigger: counter.value)
     }
@@ -41,6 +42,9 @@ private struct CounterView: View {
 /// ``SimpleHapticsTests`` because every test there replaces the shared backend, and the suite runs its
 /// tests one at a time.
 extension SimpleHapticsTests {
+
+  // MARK: Internal
+
   @Test
   func modifierPlaysOnlyWhenTheTriggerChanges() async throws {
     let counter = Counter()
@@ -79,6 +83,8 @@ extension SimpleHapticsTests {
     #expect(recorder.events.isEmpty)
     window.isHidden = true
   }
+
+  // MARK: Private
 
   private func show(_ view: some View) async throws -> UIWindow {
     let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
