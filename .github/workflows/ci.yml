@@ -1,8 +1,9 @@
 name: CI
 
+# Pull requests run CI for every branch, so pushes run it only for main.
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -14,20 +15,20 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  # The newest Xcode on the macos-26 runner image, and the oldest Xcode that the package supports.
+  XCODE_LATEST: /Applications/Xcode_26.6.app
+  XCODE_OLDEST: /Applications/Xcode_16.0.app
   SWIFTLINT_VERSION: 0.65.1
   SWIFTFORMAT_VERSION: 0.64.5
 
 jobs:
-  # macOS runners are scarce, so lint and every platform build share one job.
   lint-and-build:
     name: Lint and build
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v7
-        with:
-          # SwiftFormat reads each file's creation year from the Git history for the header check.
-          fetch-depth: 0
-      - name: Install pinned SwiftLint and SwiftFormat
+      - run: sudo xcode-select -s "$XCODE_LATEST"
+      - name: Install SwiftLint and SwiftFormat
         run: |
           curl -sSfL -o swiftlint.zip \
             "https://github.com/realm/SwiftLint/releases/download/$SWIFTLINT_VERSION/portable_swiftlint.zip"
@@ -36,31 +37,30 @@ jobs:
           unzip -oq swiftlint.zip -d "$RUNNER_TEMP/lint-tools"
           unzip -oq swiftformat.zip -d "$RUNNER_TEMP/lint-tools"
           echo "$RUNNER_TEMP/lint-tools" >> "$GITHUB_PATH"
-      - name: SwiftLint
-        run: swiftlint lint --strict
-      - name: SwiftFormat
-        run: swiftformat --lint .
+      - run: swiftlint lint --strict
+      - run: swiftformat --lint .
       - name: Build for every platform
         run: |
           for platform in "iOS" "macOS" "macOS,variant=Mac Catalyst" "tvOS" "watchOS" "visionOS"; do
             echo "::group::$platform"
-            xcodebuild build -scheme SimpleHaptics -destination "generic/platform=$platform" \
+            xcodebuild build -quiet -scheme SimpleHaptics -destination "generic/platform=$platform" \
               SWIFT_TREAT_WARNINGS_AS_ERRORS=YES
             echo "::endgroup::"
           done
       - name: Build the example app
         run: >
-          xcodebuild build
+          xcodebuild build -quiet
           -project Examples/SimpleHapticsDemo/SimpleHapticsDemo.xcodeproj
           -scheme SimpleHapticsDemo
           -destination "generic/platform=iOS Simulator"
           CODE_SIGNING_ALLOWED=NO
 
   test:
-    name: Test (macOS, iOS)
+    name: Test
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v7
+      - run: sudo xcode-select -s "$XCODE_LATEST"
       - name: Test on macOS
         run: swift test
       - name: Test on iOS Simulator
@@ -72,17 +72,31 @@ jobs:
             echo "::error::No available iPhone simulator on this runner"
             exit 1
           fi
-          xcodebuild test -scheme SimpleHaptics -destination "id=$UDID"
+          xcodebuild test -quiet -scheme SimpleHaptics -destination "id=$UDID"
 
-  # Xcode 16.0 still compiles for iOS 13, so this job also catches availability errors in the tests.
   oldest-xcode:
-    name: Build with Xcode 16.0
+    name: Xcode 16.0
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v7
-      - name: Select Xcode 16.0
-        run: sudo xcode-select -s /Applications/Xcode_16.app
+      - run: sudo xcode-select -s "$XCODE_OLDEST"
       - name: Test on macOS
         run: swift test
-      - name: Build the package and its tests for iOS
-        run: xcodebuild build-for-testing -scheme SimpleHaptics -destination "generic/platform=iOS Simulator"
+      # Type-checking needs only the SDKs, not the simulator runtimes that the runner image doesn't always
+      # install for an old Xcode.
+      - name: Type-check for the other platforms at their minimum versions
+        run: |
+          check() {
+            echo "::group::$2"
+            xcrun --sdk "$1" swiftc -typecheck -swift-version 6 -warnings-as-errors -target "$2" "${@:3}" \
+              Sources/SimpleHaptics/*.swift
+            echo "::endgroup::"
+          }
+          MACOS_SDK=$(xcrun --sdk macosx --show-sdk-path)
+          check iphonesimulator arm64-apple-ios13.0-simulator
+          check macosx arm64-apple-ios13.1-macabi \
+            -Fsystem "$MACOS_SDK/System/iOSSupport/System/Library/Frameworks" \
+            -I "$MACOS_SDK/System/iOSSupport/usr/lib/swift"
+          check appletvsimulator arm64-apple-tvos13.0-simulator
+          check watchsimulator arm64-apple-watchos6.0-simulator
+          check xrsimulator arm64-apple-xros1.0-simulator
