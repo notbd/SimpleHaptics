@@ -155,45 +155,4 @@ public enum SimpleHaptics {
 
     backend.prepare(type)
   }
-
-  // MARK: Deprecated
-
-  /// Plays a haptic in a new task.
-  ///
-  /// Cancelling the returned task doesn't stop the haptic.
-  ///
-  /// - Parameter hapticType: The type of haptic to play.
-  /// - Returns: The task that plays the haptic.
-  @available(
-    *,
-    deprecated,
-    message: """
-      Use play(_:) on the main actor, or `Task { @MainActor in SimpleHaptics.play(_:) }` elsewhere. \
-      generateTask(_:) will be removed in SimpleHaptics 1.0.0.
-      """)
-  @discardableResult
-  static public func generateTask(_ hapticType: HapticType)
-    -> Task<Void, Never>
-  {
-    Task { @MainActor in
-      play(hapticType)
-    }
-  }
-
-  /// Plays a haptic on the main actor.
-  ///
-  /// - Parameter hapticType: The type of haptic to play.
-  @available(
-    *,
-    deprecated,
-    renamed: "play(_:)",
-    message: """
-      Use play(_:) instead, with `await` outside the main actor. \
-      generate(_:) will be removed in SimpleHaptics 1.0.0.
-      """)
-  static public func generate(_ hapticType: HapticType)
-    async
-  {
-    await play(hapticType)
-  }
 }

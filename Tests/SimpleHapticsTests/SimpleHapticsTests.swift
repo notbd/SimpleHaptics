@@ -39,7 +39,7 @@ final class RecordingBackend: HapticBackend {
 @MainActor
 @Suite(.serialized)
 struct SimpleHapticsTests {
-  // HapticModifierTests.swift reads the recorder from an extension of this suite.
+  // Extensions of this suite in other files read the recorder.
   // swiftformat:disable:next testSuiteAccessControl
   let recorder: RecordingBackend = .init()
 
@@ -89,22 +89,6 @@ struct SimpleHapticsTests {
     await playOffTheMainActor(.warning)
 
     #expect(recorder.events == [.play(.warning, intensity: nil)])
-  }
-
-  @Test
-  @available(*, deprecated)
-  func deprecatedGenerateTaskStillPlays() async {
-    await SimpleHaptics.generateTask(.selection).value
-
-    #expect(recorder.events == [.play(.selection, intensity: nil)])
-  }
-
-  @Test
-  @available(*, deprecated)
-  func deprecatedGenerateStillPlays() async {
-    await SimpleHaptics.generate(.medium)
-
-    #expect(recorder.events == [.play(.medium, intensity: nil)])
   }
 
   /// Runs the real backend of the current platform. Simulator plays nothing, so this checks only that no

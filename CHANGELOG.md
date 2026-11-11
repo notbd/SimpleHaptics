@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- The documentation pages of `generate(_:)` and `generateTask(_:)` link to their replacement.
+
 ## [0.3.1] - 2026-11-02
 
 ### Changed
