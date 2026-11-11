@@ -5,7 +5,8 @@
 //  Copyright (c) TIANWEI ZHANG. All rights reserved.
 //
 
-// Deprecated API, kept for source compatibility until SimpleHaptics 1.0.0.
+// Deprecated API, kept for source compatibility until SimpleHaptics 1.0.0. To remove it, follow
+// "Deprecate API" in CONTRIBUTING.md.
 
 extension SimpleHaptics {
   /// Plays a haptic in a new task.

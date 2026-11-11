@@ -160,20 +160,23 @@ support iOS 14 to 16, or when the haptic must respect `isEnabled`.
 | `.soft`      | `UIImpactFeedbackGenerator`, `.soft`           | `.click`    | `.generic` |
 | `.rigid`     | `UIImpactFeedbackGenerator`, `.rigid`          | `.click`    | `.generic` |
 
-## Migrating from 0.2
+## Deprecated API
 
-`generateTask(_:)` and `generate(_:)` are deprecated and will be removed in 1.0.0.
+> [!IMPORTANT]
+> `generate(_:)` and `generateTask(_:)` are deprecated since 0.3.0 and will be removed in 1.0.0. Xcode warns at
+> each call, and offers a fix-it for `generate(_:)`.
 
-| 0.2                                       | 0.3                                                        |
-| ----------------------------------------- | ---------------------------------------------------------- |
-| `SimpleHaptics.generateTask(.success)`    | `SimpleHaptics.play(.success)` on the main actor. Elsewhere, `Task { @MainActor in SimpleHaptics.play(.success) }` |
-| `await SimpleHaptics.generate(.success)`  | `await SimpleHaptics.play(.success)`, or no `await` on the main actor |
+| Deprecated                               | Replacement                                                                                                         |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `SimpleHaptics.generateTask(.success)`   | `SimpleHaptics.play(.success)` on the main actor. Elsewhere, `Task { @MainActor in SimpleHaptics.play(.success) }` |
+| `await SimpleHaptics.generate(.success)` | `await SimpleHaptics.play(.success)`, or no `await` on the main actor                                              |
 
 Cancelling the task that `generateTask(_:)` returned never stopped the haptic, so no behavior is lost.
 
 ## Example App
 
-[`Examples/SimpleHapticsDemo`](./Examples/SimpleHapticsDemo) plays every haptic type and shows each feature.
+[`Examples/SimpleHapticsDemo`](./Examples/SimpleHapticsDemo) shows every feature. Each play button shows the call that
+it makes.
 
 1. Open `Examples/SimpleHapticsDemo/SimpleHapticsDemo.xcodeproj`.
 2. In **Signing & Capabilities**, select your team.
@@ -182,6 +185,11 @@ Cancelling the task that `generateTask(_:)` returned never stopped the haptic, s
 ## Documentation
 
 The API reference is written in DocC. In Xcode, select **Product** → **Build Documentation**.
+
+## Contributing
+
+[CONTRIBUTING.md](./CONTRIBUTING.md) explains how to run the CI checks on your Mac,
+deprecate API, and release a version.
 
 ## License
 
