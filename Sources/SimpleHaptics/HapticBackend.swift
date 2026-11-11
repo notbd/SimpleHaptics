@@ -31,7 +31,8 @@ protocol HapticBackend {
 /// ``play(_:intensity:)`` use the same generator.
 @MainActor
 final class SystemHapticBackend: HapticBackend {
-  nonisolated static var isSupported: Bool {
+  /// The hardware can't change while the app runs, so this reads it once.
+  nonisolated static let isSupported: Bool = {
     #if os(iOS)
     CHHapticEngine.capabilitiesForHardware().supportsHaptics
     #elseif os(watchOS) || os(macOS)
@@ -39,11 +40,14 @@ final class SystemHapticBackend: HapticBackend {
     #else
     false
     #endif
-  }
+  }()
 
   #if os(iOS)
   private typealias ImpactStyle = UIImpactFeedbackGenerator.FeedbackStyle
 
+  // UIKit marks the view-less initializers of these generators "to be deprecated" in favor of `init(view:)`
+  // and `init(style:view:)` (iOS 17.5 and later), which attach a generator to a view. SimpleHaptics plays
+  // without a view, so it keeps them. Swift doesn't warn about them yet.
   lazy private var selectionGenerator: UISelectionFeedbackGenerator = .init()
   lazy private var notificationGenerator: UINotificationFeedbackGenerator = .init()
   private var impactGenerators: [ImpactStyle: UIImpactFeedbackGenerator] = [:]
