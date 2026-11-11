@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - The documentation pages of `generate(_:)` and `generateTask(_:)` link to their replacement.
+- Each play button in the example app shows the call that it makes.
 
 ## [0.3.1] - 2026-11-02
 

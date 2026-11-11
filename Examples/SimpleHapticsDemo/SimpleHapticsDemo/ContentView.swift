@@ -10,11 +10,10 @@ import SwiftUI
 
 // MARK: - ContentView
 
-/// Plays every haptic type and shows each SimpleHaptics feature. Run it on an iPhone: Simulator plays
-/// nothing.
+/// Shows every SimpleHaptics feature. Each play button shows, in a monospaced font, the call that it makes.
 struct ContentView: View {
   @AppStorage("hapticsEnabled") private var hapticsEnabled = true
-  @State private var usesCustomIntensity = false
+  @State private var impact: SimpleHaptics.HapticType = .heavy
   @State private var intensity = 0.5
   @State private var segment = 0
   @State private var count = 0
@@ -24,38 +23,51 @@ struct ContentView: View {
     NavigationStack {
       Form {
         Section {
-          Toggle("Haptics", isOn: $hapticsEnabled)
-          LabeledContent("Device supports haptics", value: SimpleHaptics.isSupported ? "Yes" : "No")
+          Toggle(isOn: $hapticsEnabled) { Code("isEnabled") }
+          LabeledContent {
+            Code(String(SimpleHaptics.isSupported))
+          } label: {
+            Code("isSupported")
+          }
         } footer: {
-          Text("Turn off Haptics to check that every button and modifier below stays silent.")
-        }
-
-        Section("Notification") {
-          playButton(.success)
-          playButton(.warning)
-          playButton(.error)
+          Text(
+            SimpleHaptics.isSupported
+              ? "Turn off isEnabled, and every play button and modifier below stays silent."
+              : "This device plays no haptics. Run the app on an iPhone to feel them.")
         }
 
         Section("Selection") {
-          playButton(.selection)
+          playButtons([.selection])
+        }
+
+        Section("Notification") {
+          playButtons([.success, .warning, .error])
+        }
+
+        Section("Impact") {
+          playButtons(SimpleHaptics.HapticType.impacts)
         }
 
         Section {
-          playButton(.light)
-          playButton(.medium)
-          playButton(.heavy)
-          playButton(.soft)
-          playButton(.rigid)
-          Toggle("Custom intensity", isOn: $usesCustomIntensity)
-          if usesCustomIntensity {
-            LabeledContent("Intensity \(intensity, format: .number.precision(.fractionLength(2)))") {
-              Slider(value: $intensity, in: 0 ... 1)
+          Picker("Impact", selection: $impact) {
+            ForEach(SimpleHaptics.HapticType.impacts, id: \.self) { type in
+              Text(String(describing: type)).tag(type)
             }
           }
+          .pickerStyle(.segmented)
+          Slider(value: $intensity, in: 0 ... 1, step: 0.05) {
+            Text("Intensity")
+          }
+          Button {
+            SimpleHaptics.play(impact, intensity: intensity)
+          } label: {
+            // String(format:) ignores the locale, so the label stays valid Swift, such as 0.50 rather than 0,50.
+            Code("play(.\(impact), intensity: \(String(format: "%.2f", intensity)))")
+          }
         } header: {
-          Text("Impact")
+          Text("Intensity")
         } footer: {
-          Text("Custom intensity changes the impact buttons only.")
+          Text("Intensity changes impact haptics only.")
         }
 
         Section {
@@ -63,7 +75,7 @@ struct ContentView: View {
         } header: {
           Text("Prepare")
         } footer: {
-          Text("Touching down calls prepare(.rigid). Lifting your finger plays .rigid.")
+          Text("Touching down calls prepare(.rigid). Lifting your finger calls play(.rigid).")
         }
 
         Section {
@@ -85,32 +97,45 @@ struct ContentView: View {
             newValue
           }
         } header: {
-          Text(".haptic(_:trigger:) modifier")
+          Text("SwiftUI modifier")
         } footer: {
-          Text("Finish loading plays .success. Reset plays nothing, because the condition is false.")
+          Text(
+            "The segments play .selection and the stepper plays .light. Finish loading plays .success. Reset plays "
+              + "nothing, because the condition is false.")
         }
       }
       .navigationTitle("SimpleHaptics")
     }
-    .onAppear {
+    .onChange(of: hapticsEnabled, initial: true) {
       SimpleHaptics.isEnabled = hapticsEnabled
-    }
-    .onChange(of: hapticsEnabled) { _, isOn in
-      SimpleHaptics.isEnabled = isOn
     }
   }
 
   // MARK: Private
 
-  private func playButton(_ type: SimpleHaptics.HapticType) -> some View {
-    Button(".\(String(describing: type))") {
-      if usesCustomIntensity {
-        SimpleHaptics.play(type, intensity: intensity)
-      }
-      else {
+  private func playButtons(_ types: [SimpleHaptics.HapticType]) -> some View {
+    ForEach(types, id: \.self) { type in
+      Button {
         SimpleHaptics.play(type)
+      } label: {
+        Code("play(.\(type))")
       }
     }
+  }
+}
+
+// MARK: - Code
+
+/// Text in a monospaced font, for API names and values.
+private struct Code: View {
+  let text: String
+
+  init(_ text: String) {
+    self.text = text
+  }
+
+  var body: some View {
+    Text(text).font(.body.monospaced())
   }
 }
 
@@ -137,6 +162,10 @@ private struct PrepareRow: View {
             SimpleHaptics.play(.rigid)
           })
   }
+}
+
+extension SimpleHaptics.HapticType {
+  static fileprivate let impacts: [Self] = [.light, .medium, .heavy, .soft, .rigid]
 }
 
 #Preview {
