@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-11-13
+
 ### Changed
 
 - The documentation pages of `generate(_:)` and `generateTask(_:)` link to their replacement.
@@ -74,7 +76,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `generate(_:)` and `generateTask(_:)` with nine haptic types.
 
-[Unreleased]: https://github.com/notbd/SimpleHaptics/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/notbd/SimpleHaptics/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/notbd/SimpleHaptics/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/notbd/SimpleHaptics/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/notbd/SimpleHaptics/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/notbd/SimpleHaptics/compare/v0.1.0...v0.2.0
