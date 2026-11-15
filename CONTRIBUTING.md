@@ -39,6 +39,16 @@ CI runs one job per Xcode instead of several, because GitHub often has no free m
 platforms and minimum versions from Package.swift. When you add a platform there, the script fails until you add
 the platform to it too.
 
+## Raise the minimum Swift version
+
+The minimum Swift version is in four places. Change them in the same pull request:
+
+1. `swift-tools-version` in Package.swift.
+2. `XCODE_OLDEST`, and the name and `runs-on` of its job, in [`ci.yml`](./.github/workflows/ci.yml). Use the
+   oldest Xcode that comes with the new Swift version, on a runner image that has that Xcode.
+3. `--swiftversion` in `.swiftformat`.
+4. The Swift and Xcode versions under **Requirements** in the README.
+
 ## Deprecate API
 
 Deprecate in a minor version and remove in the next major version, so that every user gets at least one release

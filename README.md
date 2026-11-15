@@ -31,7 +31,7 @@ SimpleHaptics.play(.success)
 | tvOS         | 13.0    | Nothing. Calls are safe and do nothing.                                  |
 | visionOS     | 1.0     | Nothing. Calls are safe and do nothing.                                  |
 
-- Xcode 16 or later.
+- Swift 6.0 (Xcode 16) or later.
 - The SwiftUI modifier needs iOS 14, Mac Catalyst 14, macOS 11, tvOS 14, watchOS 7, or visionOS 1. On platforms
   that don't play haptics, it builds and does nothing.
 
